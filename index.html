@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — CS Engineer & Backend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f4f0e8;
+    --cream: #ede8dc;
+    --rust: #c0392b;
+    --rust-light: #e74c3c;
+    --gold: #b8860b;
+    --mid: #6b6560;
+    --light-mid: #a09890;
+    --white: #faf8f3;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(244,240,232,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(13,13,13,0.08);
+  }
+  .nav-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-brand span { color: var(--rust); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mid);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--rust); }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 48px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px solid rgba(13,13,13,0.12);
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28vw;
+    color: rgba(13,13,13,0.04);
+    bottom: -2vw;
+    right: -2vw;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -4px;
+  }
+
+  .hero-left { z-index: 1; }
+
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: slideIn 0.9s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block; width: 32px; height: 1px;
+    background: var(--rust);
+  }
+
+  h1.hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 10vw, 9rem);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: slideIn 0.9s cubic-bezier(0.16,1,0.3,1) 0.25s forwards;
+  }
+  h1.hero-name em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--rust);
+    font-size: 0.85em;
+    letter-spacing: 0;
+  }
+
+  .hero-role {
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: slideIn 0.9s cubic-bezier(0.16,1,0.3,1) 0.4s forwards;
+  }
+
+  .hero-bio {
+    font-size: 0.85rem;
+    line-height: 1.9;
+    color: var(--mid);
+    max-width: 480px;
+    margin-bottom: 48px;
+    font-weight: 300;
+    opacity: 0;
+    animation: slideIn 0.9s cubic-bezier(0.16,1,0.3,1) 0.55s forwards;
+  }
+
+  .hero-actions {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    opacity: 0;
+    animation: slideIn 0.9s cubic-bezier(0.16,1,0.3,1) 0.7s forwards;
+  }
+  .btn {
+    padding: 14px 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.25s;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+  }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-primary:hover { background: var(--rust); transform: translateY(-2px); }
+  .btn-outline { border: 1.5px solid var(--ink); color: var(--ink); background: transparent; }
+  .btn-outline:hover { background: var(--ink); color: var(--paper); }
+
+  .hero-right {
+    display: flex; flex-direction: column;
+    align-items: flex-end; justify-content: center;
+    gap: 24px; z-index: 1;
+    padding-left: 60px;
+    opacity: 0;
+    animation: fadeIn 1s 0.9s forwards;
+  }
+
+  .stat-block {
+    text-align: right;
+    padding: 24px 32px;
+    background: var(--cream);
+    border: 1px solid rgba(13,13,13,0.08);
+    border-radius: 4px;
+    width: 220px;
+    position: relative;
+  }
+  .stat-block::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--rust);
+    border-radius: 4px 0 0 4px;
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .stat-label {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-top: 4px;
+  }
+
+  /* ─── SECTION COMMON ─── */
+  section { padding: 96px 48px; }
+  .section-header {
+    display: flex; align-items: baseline; gap: 20px;
+    margin-bottom: 64px;
+  }
+  .section-num {
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    color: var(--rust);
+    font-weight: 500;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(13,13,13,0.12), transparent);
+    margin-left: 16px;
+    align-self: center;
+  }
+
+  /* ─── SKILLS ─── */
+  #skills { background: var(--ink); color: var(--paper); }
+  #skills .section-num { color: var(--rust-light); }
+  #skills .section-line { background: linear-gradient(to right, rgba(244,240,232,0.12), transparent); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: rgba(244,240,232,0.06);
+  }
+  .skill-tile {
+    background: var(--ink);
+    padding: 36px 28px;
+    transition: background 0.25s;
+    border: 1px solid rgba(244,240,232,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-tile::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--rust);
+    transition: width 0.35s;
+  }
+  .skill-tile:hover { background: rgba(244,240,232,0.04); }
+  .skill-tile:hover::after { width: 100%; }
+  .skill-emoji { font-size: 2rem; margin-bottom: 16px; display: block; }
+  .skill-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    color: var(--paper);
+    margin-bottom: 6px;
+  }
+  .skill-detail {
+    font-size: 0.7rem;
+    color: rgba(244,240,232,0.45);
+    letter-spacing: 1px;
+  }
+
+  /* ─── PROJECTS ─── */
+  #projects { background: var(--white); }
+
+  .projects-list { display: flex; flex-direction: column; gap: 2px; }
+  .project-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 40px;
+    align-items: start;
+    padding: 48px 40px;
+    background: var(--paper);
+    border: 1px solid rgba(13,13,13,0.07);
+    border-radius: 4px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-item::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(192,57,43,0.03), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .project-item:hover { transform: translateX(6px); border-left: 3px solid var(--rust); }
+  .project-item:hover::before { opacity: 1; }
+
+  .project-index {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: rgba(13,13,13,0.1);
+    line-height: 1;
+    padding-top: 4px;
+  }
+  .project-type {
+    display: inline-block;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--rust);
+    border: 1px solid var(--rust);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+  }
+  .project-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.7rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: var(--ink);
+  }
+  .project-bullets {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .project-bullets li {
+    font-size: 0.8rem;
+    color: var(--mid);
+    line-height: 1.7;
+    padding-left: 20px;
+    position: relative;
+    font-weight: 300;
+  }
+  .project-bullets li::before {
+    content: '—';
+    position: absolute; left: 0;
+    color: var(--rust);
+    font-weight: 400;
+  }
+  .project-tags {
+    display: flex; flex-direction: column; gap: 8px;
+    align-items: flex-end; padding-top: 8px;
+    min-width: 120px;
+  }
+  .tag {
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: var(--cream);
+    color: var(--mid);
+    padding: 4px 12px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* ─── EDUCATION ─── */
+  #education { background: var(--cream); }
+  .edu-certs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+
+  .subsection-label {
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(13,13,13,0.1);
+  }
+
+  .edu-card {
+    background: var(--white);
+    border: 1px solid rgba(13,13,13,0.08);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .edu-card:hover { box-shadow: 4px 4px 0 var(--rust); }
+  .edu-years {
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    color: var(--rust);
+    margin-bottom: 10px;
+  }
+  .edu-degree {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.1rem;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .edu-inst {
+    font-size: 0.75rem;
+    color: var(--mid);
+    margin-bottom: 12px;
+  }
+  .edu-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--ink);
+    letter-spacing: 2px;
+  }
+
+  .cert-row {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(13,13,13,0.07);
+  }
+  .cert-row:last-child { border-bottom: none; }
+  .cert-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    color: rgba(13,13,13,0.2);
+    min-width: 30px;
+    padding-top: 2px;
+  }
+  .cert-info .cert-name {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .cert-issuer {
+    font-size: 0.7rem;
+    color: var(--mid);
+    letter-spacing: 1px;
+  }
+
+  /* ─── ACHIEVEMENT ─── */
+  #achievement {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 120px 48px;
+  }
+  .achievement-inner {
+    max-width: 800px; margin: 0 auto;
+  }
+  .achievement-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--rust-light);
+    border: 1px solid var(--rust);
+    padding: 6px 18px;
+    border-radius: 2px;
+    margin-bottom: 40px;
+  }
+  .achievement-trophy {
+    font-size: 5rem;
+    display: block;
+    margin-bottom: 32px;
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-14px) rotate(2deg); }
+  }
+  .achievement-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    letter-spacing: 3px;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .achievement-headline em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--rust-light);
+    font-size: 0.9em;
+  }
+  .achievement-desc {
+    font-size: 0.85rem;
+    color: rgba(244,240,232,0.55);
+    line-height: 1.9;
+    font-weight: 300;
+    max-width: 600px; margin: 0 auto;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--cream);
+    border-top: 1px solid rgba(13,13,13,0.1);
+    padding: 48px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 3px;
+    color: var(--ink);
+  }
+  .footer-brand span { color: var(--rust); }
+  .footer-note {
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    color: var(--mid);
+    text-transform: uppercase;
+  }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a {
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mid);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--rust); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; }
+    .hero-right { align-items: flex-start; padding-left: 0; flex-direction: row; flex-wrap: wrap; }
+    .skills-grid { grid-template-columns: repeat(2, 1fr); }
+    .project-item { grid-template-columns: 1fr; gap: 16px; padding: 32px 24px; }
+    .project-index { display: none; }
+    .project-tags { flex-direction: row; align-items: flex-start; }
+    .edu-certs-grid { grid-template-columns: 1fr; gap: 40px; }
+    section { padding: 72px 24px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">DEV<span>.</span>FOLIO</a>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#achievement">Awards</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">CS</div>
+
+  <div class="hero-left">
+    <div class="hero-eyebrow">Available for Opportunities · 2026</div>
+    <h1 class="hero-name">Backend<br><em>Engineer</em><br>&amp; Builder</h1>
+    <div class="hero-role">Computer Science &amp; Engineering · Panimalar Engineering College</div>
+    <p class="hero-bio">
+      Detail-oriented fresher with a solid foundation in programming and problem-solving.
+      Proficient in Java and SQL with a passion for backend development. Looking to join
+      a forward-thinking team and contribute to impactful software.
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#education" class="btn btn-outline">Education &amp; Certs</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="stat-block">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Major Projects</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Certifications</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">1<span style="font-size:1.5rem">st</span></div>
+      <div class="stat-label">International Award</div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Technical Skills</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-tile reveal">
+      <span class="skill-emoji">☕</span>
+      <div class="skill-name">Java</div>
+      <div class="skill-detail">Programming Language</div>
+    </div>
+    <div class="skill-tile reveal">
+      <span class="skill-emoji">🗄️</span>
+      <div class="skill-name">SQL</div>
+      <div class="skill-detail">Data Management</div>
+    </div>
+    <div class="skill-tile reveal">
+      <span class="skill-emoji">🐙</span>
+      <div class="skill-name">GitHub</div>
+      <div class="skill-detail">Version Control</div>
+    </div>
+    <div class="skill-tile reveal">
+      <span class="skill-emoji">⚡</span>
+      <div class="skill-name">VS Code</div>
+      <div class="skill-detail">Development Environment</div>
+    </div>
+    <div class="skill-tile reveal">
+      <span class="skill-emoji">🤖</span>
+      <div class="skill-name">AI / ML</div>
+      <div class="skill-detail">YOLO · ResNet-18</div>
+    </div>
+    <div class="skill-tile reveal">
+      <span class="skill-emoji">📡</span>
+      <div class="skill-name">IoT</div>
+      <div class="skill-detail">Arduino · Sensors</div>
+    </div>
+    <div class="skill-tile reveal">
+      <span class="skill-emoji">☁️</span>
+      <div class="skill-name">Oracle Cloud</div>
+      <div class="skill-detail">OCI Certified</div>
+    </div>
+    <div class="skill-tile reveal">
+      <span class="skill-emoji">🧠</span>
+      <div class="skill-name">Gen AI</div>
+      <div class="skill-detail">Generative AI Principles</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Projects</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-list">
+
+    <div class="project-item reveal">
+      <div class="project-index">01</div>
+      <div>
+        <span class="project-type">Hardware · Embedded</span>
+        <h3 class="project-name">Maze Solving Robot<br>Using Arduino ADC</h3>
+        <ul class="project-bullets">
+          <li>Autonomous system using Arduino that navigates a maze without human control.</li>
+          <li>Uses IR and Ultrasonic sensors to detect walls and obstacles in real time.</li>
+          <li>Analog sensor signals converted to digital via Arduino's ADC for real-time decision making.</li>
+        </ul>
+      </div>
+      <div class="project-tags">
+        <span class="tag">Arduino</span>
+        <span class="tag">IR Sensors</span>
+        <span class="tag">Ultrasonic</span>
+        <span class="tag">ADC</span>
+      </div>
+    </div>
+
+    <div class="project-item reveal">
+      <div class="project-index">02</div>
+      <div>
+        <span class="project-type">AI · Computer Vision · IoT</span>
+        <h3 class="project-name">Ensemble Learning for<br>Illegal Littering Detection</h3>
+        <ul class="project-bullets">
+          <li>Built an AI &amp; IoT-based system to detect and report illegal garbage disposal automatically.</li>
+          <li>Used YOLOv11 and ResNet-18 for real-time littering detection and waste classification.</li>
+          <li>Designed a low false-positive decision model for accurate environmental monitoring.</li>
+          <li>Implemented automated alerts with time-stamped evidence for authorities.</li>
+        </ul>
+      </div>
+      <div class="project-tags">
+        <span class="tag">YOLOv11</span>
+        <span class="tag">ResNet-18</span>
+        <span class="tag">IoT</span>
+        <span class="tag">Python</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Education &amp; Certifications</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="edu-certs-grid">
+
+    <div>
+      <div class="subsection-label">Academic Background</div>
+
+      <div class="edu-card reveal">
+        <div class="edu-years">2022 — 2026</div>
+        <div class="edu-degree">Bachelor of Engineering in<br>Computer Science &amp; Engineering</div>
+        <div class="edu-inst">Panimalar Engineering College</div>
+        <div class="edu-score">7.45 CGPA</div>
+      </div>
+
+      <div class="edu-card reveal">
+        <div class="edu-years">2020 — 2022</div>
+        <div class="edu-degree">Board of Intermediate Education</div>
+        <div class="edu-inst">Ascent Junior College</div>
+        <div class="edu-score">55%</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="subsection-label">Certifications</div>
+
+      <div class="cert-row reveal">
+        <div class="cert-num">01</div>
+        <div class="cert-info">
+          <div class="cert-name">Applied Generative AI</div>
+          <div class="cert-issuer">Infosys Springboard</div>
+        </div>
+      </div>
+      <div class="cert-row reveal">
+        <div class="cert-num">02</div>
+        <div class="cert-info">
+          <div class="cert-name">Oracle Cloud Infrastructure 2024 — AI Foundations Associate</div>
+          <div class="cert-issuer">Oracle</div>
+        </div>
+      </div>
+      <div class="cert-row reveal">
+        <div class="cert-num">03</div>
+        <div class="cert-info">
+          <div class="cert-name">Principles of Generative AI</div>
+          <div class="cert-issuer">Infosys Springboard</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ACHIEVEMENT -->
+<section id="achievement">
+  <div class="achievement-inner reveal">
+    <div class="achievement-badge">Achievement Highlight</div>
+    <span class="achievement-trophy">🏆</span>
+    <h2 class="achievement-headline">1st Prize —<br><em>International Conference</em></h2>
+    <p class="achievement-desc">
+      Led a team to win 1st place at the 6th International Conference organized by PECTEAM
+      for the project <strong style="color:var(--paper)">"Turbidity Sensing and Water Management"</strong> —
+      showcasing innovative water quality monitoring solutions that made a real-world impact.
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">DEV<span>.</span>FOLIO</div>
+  <div class="footer-note">Computer Science Engineer · Class of 2026</div>
+  <div class="footer-links">
+    <a href="#skills">Skills</a>
+    <a href="#projects">Work</a>
+    <a href="#education">Education</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
